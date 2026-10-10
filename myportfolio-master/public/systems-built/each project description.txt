@@ -1,0 +1,36 @@
+Here's each project name with a clear description of what the tool does:
+
+1. **Rootcause** — An incident-response and postmortem tool that helps engineering teams document, timeline, and root-cause outages so the same failure doesn't repeat.
+
+2. **FableForge** — An AI-assisted story-writing tool that helps authors draft manuscripts, track characters, and get contextual writing suggestions as they work.
+
+3. **Loomwork** — A textile and fashion supply-chain tracker that follows fabric from supplier to finished product, keeping production stages visible in one place.
+
+4. **Thistle Legal** — A legal case-management platform that organizes documents, timelines, and clause comparisons for law firms handling active cases.
+
+5. **Kelp & Current** — An ocean-data and marine-research dashboard that visualizes buoy sensor readings and depth data for researchers studying ocean conditions.
+
+6. **Chlorophyll** — An agritech IoT dashboard that monitors crop health, soil moisture, and weather conditions across farmland using satellite and sensor data.
+
+7. **Ironclad Fleet** — A logistics and fleet-management dashboard that tracks vehicles, drivers, fuel efficiency, and delivery orders in real time.
+
+8. **Petalgram** — A social media scheduling tool built for florists and boutique brands to plan and queue Instagram content visually.
+
+9. **tinyOps** (formerly ForgeOps) — A CI/CD pipeline visualizer that shows build, test, and deployment stages with live logs, so engineering teams can monitor releases as they run.
+
+10. **Aftertone** — A music royalty tracking dashboard that shows artists and labels how streams translate into earnings, with per-track royalty splits.
+
+11. **Glasswing Metrics** — An environmental sensor dashboard for greenhouses, tracking humidity and temperature across zones to protect plant health.
+
+12. **Marrow** — A biotech research platform that organizes lab results, molecular data, and study progress for research teams running clinical studies.
+
+13. **Wayfarer** — A travel logistics and booking admin panel that lets travel managers track flights, itineraries, and bookings across a company or agency.
+
+14. **PulseCRM** — A CRM dashboard that helps sales teams manage deals through a visual pipeline, from first contact to closed deal.
+
+15. **GridWatch** — A SCADA-style industrial monitoring system that tracks power grid sensors, voltage, and frequency in real time, flagging faults as they occur.
+
+16. **Nightshift** — A hospital staff-scheduling app that manages shift assignments across departments while flagging staff fatigue risk.
+
+17. **QuietDesk** — A minimalist focus-timer and productivity app designed to reduce distraction with a single clean timer and almost no visual clutter.
+
