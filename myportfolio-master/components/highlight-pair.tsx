@@ -198,24 +198,29 @@ function StagePanel({ stage }: { stage: Stage }) {
   )
 }
 
-export default function LabHighlight() {
+const TOP_REVIEWS = 3
+
+// Rendered at the top of the Selected Work section, above the screenshot projects.
+export default function HighlightPair() {
   const [gameId, setGameId] = useState(gameStages[0].id)
+  const [showAllReviews, setShowAllReviews] = useState(false)
   const game = gameStages.find((g) => g.id === gameId) ?? gameStages[0]
+  const visibleReviews = showAllReviews ? reviews : reviews.slice(0, TOP_REVIEWS)
 
   return (
-    <section className="relative py-20 md:py-28 px-6 md:px-12 lg:px-20 bg-background" id="highlight">
-      <div className="max-w-7xl mx-auto">
+    <div className="mb-20 md:mb-32" id="highlight">
+      <div>
         {/* Header */}
-        <div className="mb-12 md:mb-16 space-y-6">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">
-            — FEATURED HIGHLIGHT
+        <div className="mb-10 md:mb-12 space-y-4">
+          <span className="text-xs uppercase tracking-[0.25em] text-neutral-500 font-mono font-bold">
+            Main highlight
           </span>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-heading font-black text-foreground leading-tight">
+          <h3 className="text-3xl md:text-5xl font-heading font-black text-foreground leading-tight">
             A fly brain and a game, side by side
-          </h2>
+          </h3>
           <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
-            Two open-source projects I reviewed and wired into this page. Launch either one live, then read how each
-            of the eight I reviewed stacked up.
+            Two open-source projects I reviewed and wired into this page. Launch either one live, then read how they
+            stacked up against the others I looked at.
           </p>
         </div>
 
@@ -257,10 +262,10 @@ export default function LabHighlight() {
         </div>
 
         {/* Reviews */}
-        <div className="mt-20 md:mt-28">
-          <div className="mb-10 space-y-3">
+        <div className="mt-14 md:mt-20">
+          <div className="mb-8 space-y-3">
             <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">— REVIEWS</span>
-            <h3 className="text-3xl md:text-4xl font-heading font-black text-foreground">What I'd actually use</h3>
+            <h4 className="text-2xl md:text-3xl font-heading font-black text-foreground">What I'd actually use</h4>
             <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
               Ranked on three things: it runs in a browser, its license allows reuse, and what the repo itself says it
               does. Licenses are as stated in each README.
@@ -268,7 +273,7 @@ export default function LabHighlight() {
           </div>
 
           <ol className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {reviews.map((review, idx) => (
+            {visibleReviews.map((review, idx) => (
               <li
                 key={review.repo}
                 className="flex gap-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-card p-5 md:p-6"
@@ -299,8 +304,17 @@ export default function LabHighlight() {
               </li>
             ))}
           </ol>
+
+          <button
+            type="button"
+            onClick={() => setShowAllReviews((v) => !v)}
+            aria-expanded={showAllReviews}
+            className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-foreground hover:text-[#bfff00] transition-colors cursor-pointer focus:outline-none"
+          >
+            {showAllReviews ? 'Show fewer reviews' : `Show all ${reviews.length} reviews`}
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

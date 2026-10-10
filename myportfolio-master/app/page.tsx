@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Navigation from '@/components/navigation'
 import Hero from '@/components/hero'
-import LabHighlight from '@/components/lab-highlight'
 import Process from '@/components/process'
 import Capabilities from '@/components/capabilities'
 import FeaturedProjects from '@/components/featured-projects'
@@ -166,7 +165,6 @@ export default function Home() {
       {/* Main content */}
       <main className="relative z-10">
         <Hero />
-        <LabHighlight />
         <Process />
         <Capabilities />
         <FeaturedProjects onImageClick={openLightbox} />

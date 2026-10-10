@@ -24,7 +24,6 @@ export default function Navigation() {
   }
 
   const navItems = [
-    { label: 'Highlight', href: '#highlight' },
     { label: 'Projects', href: '#work' },
     { label: 'About', href: '#about' },
     { label: 'Services', href: '#capabilities' },

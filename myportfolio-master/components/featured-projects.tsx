@@ -2,6 +2,7 @@
 
 import { ArrowRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import HighlightPair from '@/components/highlight-pair'
 
 interface Project {
   number: string
@@ -97,6 +98,9 @@ export default function FeaturedProjects({ onImageClick }: FeaturedProjectsProps
             Production-minded systems, shipped
           </h2>
         </div>
+
+        {/* Main highlight: paired live demos + reviews, above the screenshot projects */}
+        <HighlightPair />
 
         {/* Projects Grid */}
         <div ref={ref} className="space-y-20 md:space-y-32">
