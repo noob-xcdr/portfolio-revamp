@@ -170,6 +170,11 @@ function StagePanel({ stage }: { stage: Stage }) {
           </span>
         </div>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{stage.note}</p>
+        {launched && (
+          <p className="text-xs text-neutral-500 leading-relaxed">
+            Blank or still loading? Some hosts block embedding, so use "Open in new tab" below.
+          </p>
+        )}
         <div className="flex flex-wrap gap-x-5 gap-y-2 pt-1 text-sm font-bold">
           <a
             href={stage.demoUrl}
