@@ -1,36 +1,35 @@
-# Third-party demos
+# Third-party games
 
-Everything under `/demos` is third-party open-source software, served unmodified except
-for the changes listed below. Each was code-audited before inclusion (no `eval`,
-`new Function`, WebSocket/XHR/beacon calls, cookies or storage access in the shipped
-code, no remote-script loading) and is pinned to the exact commit shown, so what runs
-here cannot change when the upstream author pushes new code.
+Everything under `/demos` is third-party open-source software. Each game was code-audited
+before inclusion (every external URL, network call, script injection, `eval`, cookie and
+storage use, tracker and ad snippet reviewed) and is pinned to the exact upstream commit
+below, so what runs here cannot change when the upstream author pushes new code. Only the
+files each game actually loads at runtime are included.
 
-| Demo | Upstream | Pinned commit | Licence |
+| Game | Upstream | Pinned commit | Licence |
 |---|---|---|---|
-| `fly-brain/` | https://github.com/Lulzx/fly-brain | `ba0b4f815c00e81a2ef1f36165df2b1891e5e39c` | MIT |
+| `mykonos/` | https://github.com/boona13/mykonos-island-voxels | `ca5faee` | MIT (code and art) |
+| `hextris/` | https://github.com/Hextris/hextris | `3f4847d` | GPL-3.0 |
 | `three-quake/` | https://github.com/mrdoob/three-quake | `6d6177b11f81f390d8e527dd5dd738d981eb13fa` | GPL-2.0 (code); id Software shareware `pak0.pak` |
-| `claude-of-duty/` | https://github.com/mshumer/Claude-of-Duty | `d9b237b75c9304ab8d9ef4cfa0c3568c7c11a853` | MIT |
-
-## Attribution
-
-- **fly-brain**: connectome data is the Male CNS v1.0 (Janelia FlyEM and Google
-  Research, CC BY 4.0, https://male-cns.janelia.org). Body model: flybody (Apache-2.0).
-  Eye model: flyvis (MIT). Physics: MuJoCo WebAssembly (Google DeepMind, Apache-2.0).
-  Full credits: https://github.com/Lulzx/fly-brain/blob/main/docs/guide/sources.md
-- **three-quake**: Quake by id Software; Three.js port by mrdoob. The game source is
-  the unminified JavaScript in `three-quake/src`, so the GPL source is shipped with the
-  game. It is a separate program embedded in an iframe and does not change the licence
-  of the rest of this site. Three.js 0.183.0 (MIT) is vendored in `three-quake/vendor`.
-- **claude-of-duty**: by mshumer; MIT. Its in-game menu uses its own working title.
 
 ## Modifications
 
-- `fly-brain/arena.html`: removed the `coi-serviceworker.js` shim (the host sends real
-  COOP/COEP headers instead) and pointed two links at the upstream site.
-  Built with `BASE_PATH=/demos/fly-brain/ vite build`; only the 34 files the arena
-  requests are included.
-- `three-quake/index.html`: import map points at the vendored Three.js instead of a CDN.
-  `maps/`, `server/` and `tests/` were not copied.
-- `claude-of-duty/`: built with `vite build --base /demos/claude-of-duty/`; sourcemap
-  and its reference removed.
+- `mykonos/`: unmodified. Files copied as the upstream `netlify-build.mjs` would, limited
+  to the 84 the game requests at runtime.
+- `hextris/` (GPL-3.0 section 5: modified versions, changes listed here):
+  1. removed the Google AdSense script (`index.html`);
+  2. removed Google Analytics (`index.html` and `js/initialization.js`);
+  3. removed a call that sent each game-over score to `http://54.183.184.126/`
+     (`js/main.js`, `checkGameOver`);
+  4. removed an auto-running block that injected a remote script from
+     `http://hextris.io/a.js` into the page (`js/main.js`);
+  5. replaced the Google Fonts stylesheet with a self-hosted copy of Exo 2
+     (`style/exo2/`, SIL Open Font License 1.1, from `@fontsource/exo-2@5.2.5`).
+  The game source is the unminified JavaScript in `hextris/js`, so the GPL source ships
+  with the game. Not copied: `CNAME`, `README.md`, and the empty decoy `a.js`.
+- `three-quake/`: import map points at a vendored Three.js 0.183.0 (MIT, `vendor/`)
+  instead of a CDN. `maps/`, `server/` and `tests/` were not copied. The game source is the
+  unminified JavaScript in `three-quake/src`. Quake by id Software; port by mrdoob.
+
+Each game is a separate program embedded in an iframe; the GPL licences of Hextris and
+three-quake apply to those games only, not to the rest of this site.
