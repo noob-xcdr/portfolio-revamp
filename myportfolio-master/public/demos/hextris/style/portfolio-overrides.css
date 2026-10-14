@@ -1,0 +1,6 @@
+/* Portfolio copy: hide upstream share buttons, store badges and "share my score".
+   visibility (not display) keeps their layout box, which js/main.js measures. */
+#buttonCont,
+#socialShare {
+  visibility: hidden !important;
+}

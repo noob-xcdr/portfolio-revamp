@@ -24,7 +24,10 @@ files each game actually loads at runtime are included.
   4. removed an auto-running block that injected a remote script from
      `http://hextris.io/a.js` into the page (`js/main.js`);
   5. replaced the Google Fonts stylesheet with a self-hosted copy of Exo 2
-     (`style/exo2/`, SIL Open Font License 1.1, from `@fontsource/exo-2@5.2.5`).
+     (`style/exo2/`, SIL Open Font License 1.1, from `@fontsource/exo-2@5.2.5`);
+  6. hid the share buttons, app-store badges and "share my score" button
+     (`style/portfolio-overrides.css`) and removed the "buy the ad-free version"
+     line from the pause messages (`js/view.js`).
   The game source is the unminified JavaScript in `hextris/js`, so the GPL source ships
   with the game. Not copied: `CNAME`, `README.md`, and the empty decoy `a.js`.
 - `three-quake/`: import map points at a vendored Three.js 0.183.0 (MIT, `vendor/`)
