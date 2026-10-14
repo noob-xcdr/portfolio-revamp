@@ -6,6 +6,7 @@ import Hero from '@/components/hero'
 import Process from '@/components/process'
 import Capabilities from '@/components/capabilities'
 import FeaturedProjects from '@/components/featured-projects'
+import Lab from '@/components/lab'
 import ProjectArchive from '@/components/project-archive'
 import FrameWall from '@/components/frame-wall'
 import About from '@/components/about'
@@ -168,6 +169,7 @@ export default function Home() {
         <Process />
         <Capabilities />
         <FeaturedProjects onImageClick={openLightbox} />
+        <Lab />
         <FrameWall onFrameClick={openSingleLightbox} />
         <ProjectArchive onProjectClick={openLightbox} />
         <About />

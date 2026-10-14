@@ -81,8 +81,14 @@ export default function About() {
               <div className="flex items-center gap-3">
                 <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">— ABOUT</span>
               </div>
-              <p className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-black dark:text-white leading-normal">
-                I build AI systems that automate growth, improve decisions, and reduce operational overhead. Specializing in analytics, automation, and internal tools, I design custom software that helps teams scale without increasing headcount.
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-foreground leading-tight">
+                I&apos;m Victor, an AI systems engineer who ships end to end.
+              </h2>
+              <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
+                Recent work includes an SEO copilot for the Qubic ecosystem, an outreach platform that keeps sending
+                domains healthy, creator analytics for TheHive, and network monitoring for Xandeum&apos;s storage nodes. I
+                take each system from the first conversation about the problem to production, with monitoring and a proper
+                handover to the team.
               </p>
             </div>
 
@@ -92,8 +98,14 @@ export default function About() {
                 TOOLS I WORK WITH
               </span>
               {/* Auto-scrolling marquee - JavaScript-based for smooth infinite scroll */}
-              <div className="relative overflow-hidden w-full">
-                <div 
+              <div
+                className="relative overflow-hidden w-full"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                }}
+              >
+                <div
                   ref={scrollRef}
                   className="flex gap-3 min-w-max"
                 >
@@ -122,60 +134,41 @@ export default function About() {
 
               {/* Browser Body Area - Layered Cards Container */}
               <div className="relative h-64 md:h-72 w-full flex items-center justify-center overflow-hidden">
-                {/* Back Card: Sa... text card */}
-                <div className="absolute left-[10%] w-[45%] aspect-[4/3] rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-lg p-3 rotate-[-6deg] z-10 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">Sa...</span>
-                    <div className="w-8 h-1 bg-neutral-300 dark:bg-neutral-600 rounded" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded" />
-                    <div className="w-3/4 h-1 bg-neutral-200 dark:bg-neutral-700 rounded" />
-                  </div>
+                {/* Back card: OutreachIQ */}
+                <div className="absolute left-[8%] w-[45%] aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 shadow-lg bg-white dark:bg-neutral-800 rotate-[-6deg] z-10 p-2">
+                  <img
+                    src="/portfolio/image 5-6/photo_5_2026-01-13_02-04-22.jpg"
+                    alt="OutreachIQ Platform"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
                 </div>
 
-                {/* Automated SEO Card (Middle image card) */}
+                {/* Middle card: Qubic SEO */}
                 <div className="absolute w-[50%] aspect-video rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-800 shadow-xl rotate-[-2deg] z-20">
                   <img
                     src="/portfolio/Automated SEO/Screenshot (365).png"
-                    alt="Automated SEO Platform"
+                    alt="Qubic SEO Platform"
                     className="w-full h-full object-cover"
                   />
                 </div>
 
-                {/* Placeholder for Xandeum Card (Front tilted card) */}
+                {/* Front card: Xandeum pNode Analytics */}
                 <div className="absolute right-[8%] w-[45%] aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 shadow-2xl bg-white dark:bg-neutral-800 rotate-[8deg] z-30 flex items-center justify-center p-2">
                   <img
-                    src="/portfolio/HiveAI/photo_1_2026-01-28_05-47-12.jpg"
-                    alt="Platform (replace with Xandeum)"
+                    src="/portfolio/image 11-13/photo_11_2026-01-13_02-04-22.jpg"
+                    alt="Xandeum pNode Analytics"
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
               </div>
 
-              {/* Timeline Track Editor simulator */}
-              <div className="space-y-3 pt-4 border-t border-neutral-300 dark:border-neutral-800/80">
-                {/* Green track */}
-                <div className="flex items-center gap-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#bfff00] shrink-0" />
-                  <div className="relative flex-grow h-2 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
-                    <div className="absolute left-[15%] right-[35%] h-full bg-[#bfff00] rounded-full" />
-                  </div>
-                </div>
-                {/* Blue track */}
-                <div className="flex items-center gap-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#3399ff] shrink-0" />
-                  <div className="relative flex-grow h-2 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
-                    <div className="absolute left-[30%] right-[20%] h-full bg-[#3399ff] rounded-full" />
-                  </div>
-                </div>
-                {/* Gray track */}
-                <div className="flex items-center gap-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-neutral-500 shrink-0" />
-                  <div className="relative flex-grow h-2 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
-                    <div className="absolute left-[5%] right-[60%] h-full bg-neutral-400 dark:bg-neutral-600 rounded-full" />
-                  </div>
-                </div>
+              {/* Caption: which projects are in the stack */}
+              <div className="pt-4 border-t border-neutral-300 dark:border-neutral-800/80 flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-neutral-500">
+                <span>OutreachIQ</span>
+                <span aria-hidden="true">·</span>
+                <span>Qubic SEO</span>
+                <span aria-hidden="true">·</span>
+                <span>Xandeum pNode Analytics</span>
               </div>
             </div>
           </div>

@@ -1,7 +1,6 @@
 'use client'
 
 import { ArrowRight } from 'lucide-react'
-import HighlightPair from '@/components/highlight-pair'
 
 interface Project {
   title: string
@@ -70,14 +69,10 @@ export default function FeaturedProjects({ onImageClick }: FeaturedProjectsProps
           </h2>
         </div>
 
-        {/* Main highlight: audited live demos + reviews */}
-        <HighlightPair />
-
-        {/* Earlier work: all three projects in one long bar */}
+        {/* All three projects in one long bar; numbered 01-03, the Archive continues from 04 */}
         <div>
-          <p className="mb-4 text-xs uppercase tracking-[0.2em] font-mono font-bold text-neutral-500">Earlier work</p>
           <div className="grid grid-cols-1 lg:grid-cols-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-card overflow-hidden divide-y lg:divide-y-0 lg:divide-x divide-neutral-200 dark:divide-neutral-800">
-            {projects.map((project) => (
+            {projects.map((project, idx) => (
               <article key={project.title} className="group flex flex-col gap-4 p-5 md:p-6">
                 <button
                   type="button"
@@ -99,6 +94,9 @@ export default function FeaturedProjects({ onImageClick }: FeaturedProjectsProps
                 </button>
 
                 <div className="flex flex-col gap-3 flex-1">
+                  <p className="text-3xl font-heading font-black text-neutral-200 dark:text-neutral-800 select-none leading-none">
+                    {String(idx + 1).padStart(2, '0')}
+                  </p>
                   <h3 className="text-xl font-heading font-bold text-foreground group-hover:text-[#bfff00] transition-colors">
                     {project.title}
                   </h3>

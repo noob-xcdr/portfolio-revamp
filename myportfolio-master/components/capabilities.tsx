@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { ArrowRight } from 'lucide-react'
+import { PREFILL_PROJECT_EVENT } from '@/components/contact'
 
 interface ServiceCard {
   number: string
   title: string
   description: string
   checklist: string[]
+  projectType: string // matches a value of the contact form's Project Type select
 }
 
 export default function Capabilities() {
@@ -40,38 +43,50 @@ export default function Capabilities() {
       title: 'Analytics Systems',
       description: 'Analytics dashboards that connect activity to revenue and enable faster decision-making.',
       checklist: ['Data pipelines', 'Real-time dashboards', 'Performance metrics'],
+      projectType: 'analytics-dashboard',
     },
     {
       number: '02',
       title: 'Outbound Systems',
       description: 'Outbound systems that automate lead generation and improve pipeline efficiency.',
       checklist: ['Email automation', 'Inbox monitoring', 'Reply handling'],
+      projectType: 'automation-system',
     },
     {
       number: '03',
       title: 'AI Workflows',
       description: 'AI-powered systems for content generation and operations automation.',
       checklist: ['AI integration', 'Content engines', 'Process automation'],
+      projectType: 'ai-integration',
     },
     {
       number: '04',
       title: 'Backend Infrastructure',
       description: 'Backend infrastructure for data-heavy applications and API integrations.',
       checklist: ['API design', 'Data processing', 'System orchestration'],
+      projectType: 'backend-infrastructure',
     },
     {
       number: '05',
       title: 'Internal Tools',
       description: 'Custom internal tools that replace spreadsheets and manual workflows.',
       checklist: ['Custom dashboards', 'Workflow automation', 'Data integration'],
+      projectType: 'internal-tool',
     },
     {
       number: '06',
       title: 'Web3 Infrastructure',
       description: 'Web3 infrastructure, monitoring, and smart contract-adjacent tooling.',
       checklist: ['Web3 integration', 'Monitoring systems', 'Smart contract tools'],
+      projectType: 'web3-infrastructure',
     },
   ]
+
+  // Clicking a card starts a project of that type: the contact form is prefilled and scrolled into view.
+  const startProject = (projectType: string) => {
+    window.dispatchEvent(new CustomEvent(PREFILL_PROJECT_EVENT, { detail: projectType }))
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <section className="relative py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-background" id="capabilities">
@@ -85,7 +100,7 @@ export default function Capabilities() {
             Systems built for growth, operations, and visibility
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
-            From analytics to automation and internal tools, each system is built to solve real problems and improve efficiency.
+            From analytics to automation and internal tools, each system is built to solve real problems and improve efficiency. Pick one to start a project.
           </p>
         </div>
 
@@ -94,10 +109,13 @@ export default function Capabilities() {
           {services.map((service, idx) => {
             const isVisible = visibleItems.has(idx)
             return (
-              <div
+              <button
+                type="button"
                 key={idx}
                 data-index={idx}
-                className={`relative p-5 md:p-6 lg:p-8 rounded-3xl border border-slate-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/20 hover:border-slate-400 dark:hover:border-[#bfff00]/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group cursor-pointer ${
+                onClick={() => startProject(service.projectType)}
+                aria-label={`Start a ${service.title} project`}
+                className={`relative text-left w-full p-5 md:p-6 lg:p-8 rounded-3xl border border-slate-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/20 hover:border-slate-400 dark:hover:border-[#bfff00]/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#bfff00] ${
                   isVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-6'
@@ -114,7 +132,7 @@ export default function Capabilities() {
                 <div className="relative z-10 flex flex-col justify-between h-full space-y-4 md:space-y-6">
                   {/* Title & Description */}
                   <div className="space-y-2 md:space-y-3">
-                    <h3 className="text-lg md:text-xl font-heading font-bold text-foreground group-hover:text-[#bfff00] transition-colors pr-8">
+                    <h3 className="text-lg md:text-xl font-heading font-bold text-foreground group-hover:text-lime-600 dark:group-hover:text-[#bfff00] transition-colors pr-8">
                       {service.title}
                     </h3>
                     <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -141,8 +159,13 @@ export default function Capabilities() {
                       </li>
                     ))}
                   </ul>
+
+                  {/* Revealed on hover/focus; always shown on touch screens */}
+                  <span className="inline-flex items-center gap-2 text-sm font-bold text-lime-700 dark:text-[#bfff00] opacity-100 md:opacity-0 md:-translate-x-1 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-focus-visible:opacity-100 transition-all duration-300">
+                    Start a project <ArrowRight size={14} />
+                  </span>
                 </div>
-              </div>
+              </button>
             )
           })}
         </div>

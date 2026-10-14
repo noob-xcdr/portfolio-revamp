@@ -41,7 +41,7 @@ export default function FrameWall({ onFrameClick }: FrameWallProps) {
       description: 'A legal case-management platform that organizes documents, timelines, and clause comparisons for law firms handling active cases.',
     },
     {
-      src: '/systems-built/kelps & current.png',
+      src: '/systems-built/kelps-and-current.png',
       alt: 'Kelp & Current',
       name: 'Kelp & Current',
       description: 'An ocean-data and marine-research dashboard that visualizes buoy sensor readings and depth data for researchers studying ocean conditions.',
@@ -126,11 +126,14 @@ export default function FrameWall({ onFrameClick }: FrameWallProps) {
         {/* Header */}
         <div className="mb-12 md:mb-16 space-y-6">
           <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">— SYSTEMS BUILT</span>
+            <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">— INTERFACES</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-heading font-black text-foreground leading-tight">
-            Every screen here replaced a spreadsheet or a manual process.
+            Seventeen interfaces, from incident response to greenhouse sensors.
           </h2>
+          <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+            Hover to pause the wall. Click any screen to see it full size and read what it does.
+          </p>
         </div>
 
         {/* Marquee Container */}
@@ -150,6 +153,9 @@ export default function FrameWall({ onFrameClick }: FrameWallProps) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
+                  <span className="absolute left-2 bottom-2 max-w-[calc(100%-1rem)] truncate px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm text-[11px] sm:text-xs font-semibold text-white">
+                    {project.name}
+                  </span>
                 </button>
               ))}
             </div>
@@ -170,6 +176,9 @@ export default function FrameWall({ onFrameClick }: FrameWallProps) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
+                  <span className="absolute left-2 bottom-2 max-w-[calc(100%-1rem)] truncate px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm text-[11px] sm:text-xs font-semibold text-white">
+                    {project.name}
+                  </span>
                 </button>
               ))}
             </div>

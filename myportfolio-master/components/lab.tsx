@@ -224,22 +224,23 @@ function StagePanel({ stage, featured = false }: { stage: Stage; featured?: bool
   )
 }
 
-// Rendered at the top of the Selected Work section, above the earlier projects.
-export default function HighlightPair() {
+// Lab: playable third-party games, kept apart from the client work in Selected Work.
+export default function Lab() {
   const [showAllReviews, setShowAllReviews] = useState(false)
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, TOP_REVIEWS)
 
   return (
-    <div className="mb-20 md:mb-32" id="highlight">
+    <section className="relative py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-background" id="lab">
+      <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-10 md:mb-12 space-y-4">
-        <span className="text-xs uppercase tracking-[0.25em] text-neutral-500 font-mono font-bold">Main highlight</span>
-        <h3 className="text-3xl md:text-5xl font-heading font-black text-foreground leading-tight">
+      <div className="mb-12 md:mb-16 space-y-6">
+        <span className="text-xs uppercase tracking-[0.25em] text-[#bfff00] font-mono font-bold">— LAB</span>
+        <h2 className="text-4xl md:text-6xl font-heading font-black text-foreground leading-tight">
           Games you can play right here
-        </h3>
-        <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
-          Open-source games I dug up on GitHub, audited for ads, trackers and phone-home code, and host on this site.
-          Pick one and press Launch.
+        </h2>
+        <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+          A side project: open-source games I dug up on GitHub, audited for ads, trackers and phone-home code, and
+          host on this site. Pick one and press Launch.
         </p>
       </div>
 
@@ -318,6 +319,7 @@ export default function HighlightPair() {
           {showAllReviews ? 'Show fewer reviews' : `Show all ${reviews.length} reviews`}
         </button>
       </div>
-    </div>
+      </div>
+    </section>
   )
 }

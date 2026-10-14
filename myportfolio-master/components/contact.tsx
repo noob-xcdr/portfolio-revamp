@@ -1,7 +1,22 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
-import { Mail, Film, ArrowUpRight } from 'lucide-react'
+import { useEffect, useRef, useState, FormEvent } from 'react'
+import { Mail, Copy, Check } from 'lucide-react'
+
+// Fired by the Capabilities cards to start a project of a given type.
+export const PREFILL_PROJECT_EVENT = 'prefill-project'
+
+const EMAIL = 'oxvctr@gmail.com'
+
+const PROJECT_TYPES: { value: string; label: string }[] = [
+  { value: 'analytics-dashboard', label: 'Analytics Dashboard' },
+  { value: 'automation-system', label: 'Automation System' },
+  { value: 'internal-tool', label: 'Internal Tool' },
+  { value: 'ai-integration', label: 'AI Integration' },
+  { value: 'backend-infrastructure', label: 'Backend Infrastructure' },
+  { value: 'web3-infrastructure', label: 'Web3 Infrastructure' },
+  { value: 'other', label: 'Other System' },
+]
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -14,6 +29,38 @@ export default function Contact() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [prefilledLabel, setPrefilledLabel] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const prefillTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  // A Capabilities card was clicked: preselect that project type and flag it briefly.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const value = (e as CustomEvent<string>).detail
+      const match = PROJECT_TYPES.find((t) => t.value === value)
+      if (!match) return
+      setFormState((prev) => ({ ...prev, projectType: match.value }))
+      setPrefilledLabel(match.label)
+      clearTimeout(prefillTimer.current)
+      prefillTimer.current = setTimeout(() => setPrefilledLabel(null), 4000)
+    }
+    window.addEventListener(PREFILL_PROJECT_EVENT, onPrefill)
+    return () => {
+      window.removeEventListener(PREFILL_PROJECT_EVENT, onPrefill)
+      clearTimeout(prefillTimer.current)
+    }
+  }, [])
+
+  // Copy the address; if the clipboard is unavailable, fall back to the mail app.
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.location.href = `mailto:${EMAIL}?subject=Project%20Inquiry`
+    }
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -30,7 +77,7 @@ export default function Contact() {
     formData.append('_subject', `Project Inquiry: ${formState.projectType}`)
     formData.append('_captcha', 'false')
     
-    fetch('https://formsubmit.co/oxvctr@gmail.com', {
+    fetch(`https://formsubmit.co/${EMAIL}`, {
       method: 'POST',
       body: formData,
     })
@@ -47,7 +94,7 @@ export default function Contact() {
       })
       .catch((error) => {
         console.error('Form submission error:', error)
-        alert('Failed to submit form. Please email oxvctr@gmail.com directly.')
+        alert(`Failed to submit form. Please email ${EMAIL} directly.`)
       })
       .finally(() => {
         setIsSubmitting(false)
@@ -80,40 +127,38 @@ export default function Contact() {
               </p>
             </div>
 
-            {/* Contact Cards */}
-            <div className="space-y-4 pt-4">
-              {/* Email */}
-              <a
-                href="mailto:oxvctr@gmail.com?subject=Project%20Inquiry"
-                className="flex items-center justify-between p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/10 hover:border-[#bfff00]/40 hover:bg-neutral-100 dark:hover:bg-neutral-900/30 transition-all duration-300 group"
+            {/* Email: click copies the address */}
+            <div className="space-y-3 pt-4">
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="w-full flex items-center justify-between p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/10 hover:border-[#bfff00]/40 hover:bg-neutral-100 dark:hover:bg-neutral-900/30 transition-all duration-300 group text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#bfff00]"
+                aria-label={copied ? 'Email address copied' : `Copy email address ${EMAIL}`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 min-w-0">
                   <div className="w-10 h-10 rounded-full bg-[#bfff00] flex items-center justify-center flex-shrink-0">
                     <Mail size={16} className="text-black" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs text-neutral-500 font-mono font-bold uppercase tracking-wider mb-0.5">Email</p>
-                    <p className="text-base font-bold text-foreground group-hover:text-[#bfff00] transition-colors">oxvctr@gmail.com</p>
+                    <p className="text-base font-bold text-foreground group-hover:text-lime-700 dark:group-hover:text-[#bfff00] transition-colors truncate">{EMAIL}</p>
                   </div>
                 </div>
-                <ArrowUpRight size={18} className="text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-white transition-all" />
-              </a>
-
-              {/* Vimeo / Portfolio Link */}
+                <span
+                  className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider transition-colors ${
+                    copied ? 'text-lime-700 dark:text-[#bfff00]' : 'text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-white'
+                  }`}
+                  aria-live="polite"
+                >
+                  {copied ? <Check size={16} /> : <Copy size={16} />}
+                  {copied ? 'Copied' : 'Copy'}
+                </span>
+              </button>
               <a
-                href="#work"
-                className="flex items-center justify-between p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/10 hover:border-[#bfff00]/40 hover:bg-neutral-100 dark:hover:bg-neutral-900/30 transition-all duration-300 group"
+                href={`mailto:${EMAIL}?subject=Project%20Inquiry`}
+                className="inline-block text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline underline-offset-4 decoration-neutral-300 dark:decoration-neutral-700 transition-colors"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#bfff00] flex items-center justify-center flex-shrink-0">
-                    <Film size={16} className="text-black" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-neutral-500 font-mono font-bold uppercase tracking-wider mb-0.5">Showcase</p>
-                    <p className="text-base font-bold text-foreground group-hover:text-[#bfff00] transition-colors">Selected Work</p>
-                  </div>
-                </div>
-                <ArrowUpRight size={18} className="text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-white transition-all" />
+                or open it in your mail app
               </a>
             </div>
           </div>
@@ -158,16 +203,22 @@ export default function Contact() {
                     required
                     value={formState.projectType}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 focus:border-[#bfff00] focus:outline-none text-neutral-900 dark:text-neutral-300 font-medium transition-all"
+                    className={`w-full px-4 py-3 rounded-xl bg-white dark:bg-neutral-950 border focus:border-[#bfff00] focus:outline-none text-neutral-900 dark:text-neutral-300 font-medium transition-all duration-500 ${
+                      prefilledLabel ? 'border-[#bfff00] ring-4 ring-[#bfff00]/25' : 'border-neutral-200 dark:border-neutral-800'
+                    }`}
                   >
                     <option value="">Select type...</option>
-                    <option value="analytics-dashboard">Analytics Dashboard</option>
-                    <option value="automation-system">Automation System</option>
-                    <option value="internal-tool">Internal Tool</option>
-                    <option value="ai-integration">AI Integration</option>
-                    <option value="web3-infrastructure">Web3 Infrastructure</option>
-                    <option value="other">Other System</option>
+                    {PROJECT_TYPES.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
+                    ))}
                   </select>
+                  {prefilledLabel && (
+                    <p className="mt-2 text-xs font-mono text-lime-700 dark:text-[#bfff00]" aria-live="polite">
+                      Set to {prefilledLabel}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="text-xs font-bold text-neutral-500 dark:text-neutral-400 mb-3 block uppercase tracking-widest font-mono">Budget</label>

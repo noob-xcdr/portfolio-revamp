@@ -74,7 +74,7 @@ export default function Hero() {
           </div>
 
           {/* H1 always white — it sits over the video */}
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] font-heading font-black leading-[0.95] tracking-[-0.03em] text-white relative z-10">
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[length:min(7rem,7.6vw,13vh)] font-heading font-black leading-[0.95] tracking-[-0.03em] text-white relative z-10">
             <span className="block">I build AI systems</span>
             <span className="block text-neutral-300">that automate growth,</span>
             <span className="block">improve decisions,</span>
