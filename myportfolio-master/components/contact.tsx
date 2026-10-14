@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, FormEvent } from 'react'
-import { Mail, Copy, Check } from 'lucide-react'
+import { Mail, Copy, Check, CheckCircle2, AlertCircle } from 'lucide-react'
 
 // Fired by the Capabilities cards to start a project of a given type.
 export const PREFILL_PROJECT_EVENT = 'prefill-project'
@@ -18,17 +18,32 @@ const PROJECT_TYPES: { value: string; label: string }[] = [
   { value: 'other', label: 'Other System' },
 ]
 
+const BUDGETS: { value: string; label: string }[] = [
+  { value: 'under-1k', label: 'Under $1,000' },
+  { value: '1k-2k', label: '$1,000 - $2,000' },
+  { value: '2k-3k', label: '$2,000 - $3,000' },
+  { value: '3k-4k', label: '$3,000 - $4,000' },
+  { value: '4k-5k', label: '$4,000 - $5,000' },
+  { value: '5k+', label: '$5,000+' },
+]
+
+const TIMELINES: { value: string; label: string }[] = [
+  { value: 'urgent', label: 'Urgent (1-2 weeks)' },
+  { value: 'soon', label: 'Soon (3-4 weeks)' },
+  { value: 'flexible', label: 'Flexible (1+ month)' },
+]
+
+const labelOf = (list: { value: string; label: string }[], value: string) =>
+  list.find((o) => o.value === value)?.label ?? value
+
+const EMPTY_FORM = { name: '', email: '', projectType: '', budget: '', timeline: '', details: '' }
+
+type SendStatus = 'idle' | 'sending' | 'sent' | 'failed'
+
 export default function Contact() {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    projectType: '',
-    budget: '',
-    timeline: '',
-    details: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [formState, setFormState] = useState(EMPTY_FORM)
+  const [status, setStatus] = useState<SendStatus>('idle')
+  const honeyRef = useRef<HTMLInputElement>(null)
   const [prefilledLabel, setPrefilledLabel] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const prefillTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -62,43 +77,58 @@ export default function Contact() {
     }
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  // The same message as a ready-to-send email, used as the fallback when the form can't deliver it.
+  const mailtoHref = () => {
+    const typeLabel = labelOf(PROJECT_TYPES, formState.projectType)
+    const body = [
+      `Name: ${formState.name}`,
+      `Email: ${formState.email}`,
+      `Project type: ${typeLabel}`,
+      `Budget: ${labelOf(BUDGETS, formState.budget)}`,
+      `Timeline: ${labelOf(TIMELINES, formState.timeline)}`,
+      '',
+      formState.details,
+    ].join('\n')
+    return `mailto:${EMAIL}?subject=${encodeURIComponent(`Project Inquiry: ${typeLabel}`)}&body=${encodeURIComponent(body)}`
+  }
+
+  // FormSubmit's AJAX endpoint answers with JSON; only a response that says success counts as sent.
+  // Anything else (error status, non-JSON page, network failure, timeout) keeps the form filled in
+  // and offers the email fallback instead of claiming the message went out.
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    
-    // Formsubmit.co handles the email delivery without needing an API
-    const formData = new FormData()
-    formData.append('name', formState.name)
-    formData.append('email', formState.email)
-    formData.append('project_type', formState.projectType)
-    formData.append('budget', formState.budget)
-    formData.append('timeline', formState.timeline)
-    formData.append('details', formState.details)
-    formData.append('_subject', `Project Inquiry: ${formState.projectType}`)
-    formData.append('_captcha', 'false')
-    
-    fetch(`https://formsubmit.co/${EMAIL}`, {
-      method: 'POST',
-      body: formData,
-    })
-      .then(() => {
-        setSubmitSuccess(true)
-        setFormState({
-          name: '',
-          email: '',
-          projectType: '',
-          budget: '',
-          timeline: '',
-          details: '',
-        })
+    setStatus('sending')
+    const typeLabel = labelOf(PROJECT_TYPES, formState.projectType)
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000)
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          project_type: typeLabel,
+          budget: labelOf(BUDGETS, formState.budget),
+          timeline: labelOf(TIMELINES, formState.timeline),
+          details: formState.details,
+          _subject: `Project Inquiry: ${typeLabel}`,
+          _captcha: 'false', // reCAPTCHA cannot be completed from a fetch; the honeypot below filters bots
+          _honey: honeyRef.current?.value ?? '',
+        }),
+        signal: controller.signal,
       })
-      .catch((error) => {
-        console.error('Form submission error:', error)
-        alert(`Failed to submit form. Please email ${EMAIL} directly.`)
-      })
-      .finally(() => {
-        setIsSubmitting(false)
-      })
+      const data = await res.json().catch(() => null)
+      const delivered = res.ok && (data?.success === true || data?.success === 'true')
+      if (!delivered) throw new Error(data?.message || `FormSubmit responded ${res.status}`)
+      setStatus('sent')
+      setFormState(EMPTY_FORM)
+    } catch (error) {
+      console.error('Contact form was not delivered:', error)
+      setStatus('failed')
+    } finally {
+      clearTimeout(timeout)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -107,6 +137,7 @@ export default function Contact() {
       ...prev,
       [name]: value,
     }))
+    if (status === 'sent' || status === 'failed') setStatus('idle')
   }
 
   return (
@@ -166,6 +197,16 @@ export default function Contact() {
           {/* Right side - Contact Form */}
           <div className="p-6 md:p-8 lg:p-10 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/10 backdrop-blur-sm shadow-sm dark:shadow-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot: hidden from people; bots that fill it get dropped by FormSubmit */}
+              <input
+                ref={honeyRef}
+                type="text"
+                name="_honey"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
               {/* Name & Email Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -230,12 +271,11 @@ export default function Contact() {
                     className="w-full px-4 py-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 focus:border-[#bfff00] focus:outline-none text-neutral-900 dark:text-neutral-300 font-medium transition-all"
                   >
                     <option value="">Select range...</option>
-                    <option value="under-1k">Under $1,000</option>
-                    <option value="1k-2k">$1,000 - $2,000</option>
-                    <option value="2k-3k">$2,000 - $3,000</option>
-                    <option value="3k-4k">$3,000 - $4,000</option>
-                    <option value="4k-5k">$4,000 - $5,000</option>
-                    <option value="5k+">$5,000+</option>
+                    {BUDGETS.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -251,9 +291,11 @@ export default function Contact() {
                   className="w-full px-4 py-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 focus:border-[#bfff00] focus:outline-none text-neutral-900 dark:text-neutral-300 font-medium transition-all"
                 >
                   <option value="">Select timeline...</option>
-                  <option value="urgent">Urgent (1-2 weeks)</option>
-                  <option value="soon">Soon (3-4 weeks)</option>
-                  <option value="flexible">Flexible (1+ month)</option>
+                  {TIMELINES.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -274,11 +316,41 @@ export default function Contact() {
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={status === 'sending'}
                 className="w-full px-6 py-4 rounded-xl bg-[#bfff00] text-black font-bold hover:bg-[#cfff33] hover:shadow-lg hover:shadow-[#bfff00]/30 transition-all duration-300 mt-6 text-sm uppercase tracking-wider cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Sending...' : submitSuccess ? 'Message sent!' : 'Send message →'}
+                {status === 'sending' ? 'Sending...' : 'Send message →'}
               </button>
+
+              {/* Result: success only when FormSubmit confirmed delivery */}
+              {status === 'sent' && (
+                <div
+                  role="status"
+                  className="flex items-start gap-3 rounded-xl border border-lime-600/40 dark:border-[#bfff00]/40 bg-lime-50 dark:bg-[#bfff00]/5 p-4 text-sm text-neutral-800 dark:text-neutral-200"
+                >
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-lime-700 dark:text-[#bfff00]" />
+                  <p>Message sent. I&apos;ll get back to you within 24 hours.</p>
+                </div>
+              )}
+              {status === 'failed' && (
+                <div
+                  role="alert"
+                  className="flex items-start gap-3 rounded-xl border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/5 p-4 text-sm text-neutral-800 dark:text-neutral-200"
+                >
+                  <AlertCircle size={18} className="mt-0.5 shrink-0 text-red-600 dark:text-red-400" />
+                  <div className="space-y-2">
+                    <p>Your message didn&apos;t go through. Everything you typed is still in the form.</p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 font-bold">
+                      <a href={mailtoHref()} className="underline underline-offset-4 hover:text-lime-700 dark:hover:text-[#bfff00]">
+                        Send it as an email instead
+                      </a>
+                      <button type="submit" className="underline underline-offset-4 hover:text-lime-700 dark:hover:text-[#bfff00] cursor-pointer">
+                        Try again
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </form>
           </div>
         </div>

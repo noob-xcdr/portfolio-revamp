@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ArrowDown, ArrowUpRight, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Maximize, Minimize } from 'lucide-react'
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
-  const [soundOn, setSoundOn] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
@@ -126,27 +125,6 @@ export default function Hero() {
 
             {/* Interactive controls */}
             <div className="flex items-center gap-4 text-neutral-500 dark:text-neutral-500 sm:justify-end">
-              {/* Sound Toggle */}
-              <button
-                onClick={() => setSoundOn(!soundOn)}
-                className="flex items-center gap-2 text-xs font-mono uppercase font-bold tracking-wider hover:text-neutral-900 dark:hover:text-white transition-colors"
-                aria-label="Toggle sound"
-              >
-                {soundOn ? (
-                  <>
-                    <Volume2 size={16} className="text-[#bfff00]" />
-                    <span>Sound On</span>
-                  </>
-                ) : (
-                  <>
-                    <VolumeX size={16} />
-                    <span>Sound Off</span>
-                  </>
-                )}
-              </button>
-
-              <span className="w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-800" />
-
               {/* Fullscreen Button */}
               <button
                 onClick={toggleFullscreen}
