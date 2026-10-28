@@ -10,7 +10,6 @@ files each game actually loads at runtime are included.
 |---|---|---|---|
 | `mykonos/` | https://github.com/boona13/mykonos-island-voxels | `ca5faee` | MIT (code and art) |
 | `hextris/` | https://github.com/Hextris/hextris | `3f4847d` | GPL-3.0 |
-| `three-quake/` | https://github.com/mrdoob/three-quake | `6d6177b11f81f390d8e527dd5dd738d981eb13fa` | GPL-2.0 (code); id Software shareware `pak0.pak` |
 
 ## Modifications
 
@@ -30,9 +29,6 @@ files each game actually loads at runtime are included.
      line from the pause messages (`js/view.js`).
   The game source is the unminified JavaScript in `hextris/js`, so the GPL source ships
   with the game. Not copied: `CNAME`, `README.md`, and the empty decoy `a.js`.
-- `three-quake/`: import map points at a vendored Three.js 0.183.0 (MIT, `vendor/`)
-  instead of a CDN. `maps/`, `server/` and `tests/` were not copied. The game source is the
-  unminified JavaScript in `three-quake/src`. Quake by id Software; port by mrdoob.
 
-Each game is a separate program embedded in an iframe; the GPL licences of Hextris and
-three-quake apply to those games only, not to the rest of this site.
+Each game is a separate program embedded in an iframe; the GPL licence of Hextris applies
+to that game only, not to the rest of this site.

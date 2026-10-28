@@ -27,17 +27,16 @@ interface Review {
 
 // Every game is code-audited, pinned to a commit and self-hosted under /demos
 // (see public/demos/NOTICE.md for licences and the exact changes made).
-const featuredStage: Stage = {
-  id: 'mykonos',
-  title: 'Mykonos Island Voxels',
-  license: 'MIT',
-  demoUrl: '/demos/mykonos/index.html',
-  note: 'A calm isometric island builder with Mykonos-style voxel art: whitewashed houses, bougainvillea, windmills and sea walls.',
-  size: '~31 MB',
-  hint: 'Tap or click to place, long-press to erase, pinch or scroll to zoom. Your island saves in this browser.',
-}
-
-const gameStages: Stage[] = [
+const stages: Stage[] = [
+  {
+    id: 'mykonos',
+    title: 'Mykonos Island Voxels',
+    license: 'MIT',
+    demoUrl: '/demos/mykonos/index.html',
+    note: 'A calm isometric island builder with Mykonos-style voxel art: whitewashed houses, bougainvillea, windmills and sea walls.',
+    size: '~31 MB',
+    hint: 'Tap or click to place, long-press to erase, pinch or scroll to zoom. Your island saves in this browser.',
+  },
   {
     id: 'hextris',
     title: 'Hextris',
@@ -46,15 +45,6 @@ const gameStages: Stage[] = [
     note: 'Fast hexagon puzzle: rotate the hexagon to stack matching colours before they reach the edge.',
     size: '~2 MB',
     hint: 'Arrow keys, or tap the left or right half of the board to rotate.',
-  },
-  {
-    id: 'three-quake',
-    title: 'Three.js Quake',
-    license: 'GPL-2.0',
-    demoUrl: '/demos/three-quake/index.html',
-    note: "id Software's Quake ported to Three.js by mrdoob. Includes the shareware Episode 1.",
-    size: '~22 MB',
-    hint: 'Desktop: click to capture the mouse, Esc releases it. Phone: left thumb moves, right side looks.',
   },
 ]
 
@@ -77,15 +67,6 @@ const reviews: Review[] = [
     verdict: 'Most addictive: a quick-fire hexagon puzzle that plays well with touch or arrow keys.',
     caveat: 'The upstream page shipped ads, two analytics trackers, a score beacon to a hard-coded IP address and a remote script loader. I removed all of them.',
     audited: 'After patching, zero outside requests in a browser test. Every change is listed in the demos notice.',
-  },
-  {
-    name: 'mrdoob/three-quake',
-    repo: 'https://github.com/mrdoob/three-quake',
-    license: 'GPL-2.0',
-    status: 'live',
-    verdict: 'Most faithful: real Quake running on Three.js, with touch controls for phones.',
-    caveat: 'Single-player is Episode 1 only. The multiplayer menu talks to a third-party server, and only if you open it.',
-    audited: 'Game data is a standard Quake PACK file of ordinary assets; Three.js is self-hosted instead of loaded from a CDN.',
   },
   {
     name: 'gabrielecirulli/2048',
@@ -145,7 +126,7 @@ const statusLabel: Record<ReviewStatus, string> = {
 
 const TOP_REVIEWS = 3
 
-function StagePanel({ stage, featured = false }: { stage: Stage; featured?: boolean }) {
+function StagePanel({ stage }: { stage: Stage }) {
   const [launched, setLaunched] = useState(false)
   const [canFullscreen, setCanFullscreen] = useState(false)
   const frameRef = useRef<HTMLIFrameElement>(null)
@@ -160,7 +141,7 @@ function StagePanel({ stage, featured = false }: { stage: Stage; featured?: bool
   }
 
   // Phones get a taller window so the game is not a thin strip.
-  const aspect = featured ? 'aspect-[4/5] sm:aspect-video' : 'aspect-[4/5] sm:aspect-[4/3] lg:aspect-video'
+  const aspect = 'aspect-[4/5] sm:aspect-[4/3]'
 
   return (
     <div className="flex flex-col rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-card overflow-hidden">
@@ -244,12 +225,9 @@ export default function Lab() {
         </p>
       </div>
 
-      {/* Featured game: full width */}
-      <StagePanel stage={featuredStage} featured />
-
-      {/* Two more games side by side */}
-      <div className="mt-6 lg:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
-        {gameStages.map((g) => (
+      {/* The two games, side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
+        {stages.map((g) => (
           <StagePanel key={g.id} stage={g} />
         ))}
       </div>
